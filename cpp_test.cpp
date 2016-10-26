@@ -45,7 +45,8 @@ int main(int argc, char **argv)
     double kernel_bandwidth = 3;
 
     vector<vector<double> > points = load_points("test.csv");
-    vector<vector<double> > shifted_points = msp->cluster(points, kernel_bandwidth);
+    vector<vector<double> > shifted_points = msp->meanshift(points, kernel_bandwidth);
+    vector<Cluster> clusters = msp->cluster(points, shifted_points);
 
     FILE *fp = fopen("result.csv", "w");
     if(!fp){
@@ -61,5 +62,10 @@ int main(int argc, char **argv)
         fprintf(fp, "\n");
     }
     fclose(fp);
+
+    printf("cluster num: %d, centroids are: \n", clusters.size());
+    for (int i = 0; i < clusters.size(); ++i) {
+        printf("%f, %f\n", clusters[i].mode[0], clusters[i].mode[1]);
+    }
     return 0;
 }

@@ -5,6 +5,7 @@
 using namespace std;
 
 #define EPSILON 0.0000001
+#define EPSILON_CLUSTER 0.01
 
 double euclidean_distance(const vector<double> &point_a, const vector<double> &point_b){
     double total = 0;
@@ -23,7 +24,7 @@ void MeanShift::set_kernel( double (*_kernel_func)(double,double) ) {
     if(!_kernel_func){
         kernel_func = gaussian_kernel;
     } else {
-        kernel_func = _kernel_func;    
+        kernel_func = _kernel_func;
     }
 }
 
@@ -74,8 +75,8 @@ vector<vector<double> > MeanShift::meanshift(const vector<vector<double> > & poi
 }
 
 vector<Cluster> MeanShift::cluster(
-    const vector<vector<double> > & points, 
-    const vector<vector<double> > & shifted_points)
+        const vector<vector<double> > &points,
+        const vector<vector<double> > &shifted_points)
 {
     vector<Cluster> clusters;
 
@@ -83,7 +84,7 @@ vector<Cluster> MeanShift::cluster(
 
         int c = 0;
         for (; c < clusters.size(); c++) {
-            if (euclidean_distance(shifted_points[i], clusters[c].mode) <= EPSILON) {
+            if (euclidean_distance(shifted_points[i], clusters[c].mode) <= EPSILON_CLUSTER) {
                 break;
             }
         }
